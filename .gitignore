@@ -41,3 +41,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Lockfiles
+pubspec.lock
+l10n_errors.txt
