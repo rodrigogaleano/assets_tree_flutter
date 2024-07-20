@@ -4,7 +4,7 @@ import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
 import 'components/unit_item/unit_item_view.dart';
 
-abstract class HomeViewModelProtocol with ChangeNotifier {
+abstract class HomeViewModelProtocol {
   List<UnitItemViewModelProtocol> get unitsViewModels;
 }
 
@@ -18,31 +18,26 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: ListenableBuilder(
-          listenable: viewModel,
-          builder: (_, __) {
-            return CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  centerTitle: true,
-                  backgroundColor: AppColors.darkBlue,
-                  // TODO: Substituir pela logo da empresa
-                  title: Text(
-                    'TRACTIAN',
-                    style: AppFonts.robotoBold(24, AppColors.white),
-                  ),
-                ),
-                SliverList.builder(
-                  itemCount: viewModel.unitsViewModels.length,
-                  itemBuilder: (_, index) {
-                    final currentViewModel = viewModel.unitsViewModels[index];
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              centerTitle: true,
+              backgroundColor: AppColors.darkBlue,
+              // TODO: Substituir pela logo da empresa
+              title: Text(
+                'TRACTIAN',
+                style: AppFonts.robotoBold(24, AppColors.white),
+              ),
+            ),
+            SliverList.builder(
+              itemCount: viewModel.unitsViewModels.length,
+              itemBuilder: (_, index) {
+                final currentViewModel = viewModel.unitsViewModels[index];
 
-                    return UnitItemView(viewModel: currentViewModel);
-                  },
-                ),
-              ],
-            );
-          },
+                return UnitItemView(viewModel: currentViewModel);
+              },
+            ),
+          ],
         ),
       ),
     );
