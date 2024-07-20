@@ -1,5 +1,7 @@
 {
     "@@locale": "en",
 
-    "appTitle": "Asset Tree"
+    "appTitle": "Asset Tree",
+
+    "homeTitle": "TRACTIAN"
 }

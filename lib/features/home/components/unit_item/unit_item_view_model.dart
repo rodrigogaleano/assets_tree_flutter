@@ -1,3 +1,5 @@
+import 'package:flutter_gen/gen_l10n/localization.dart';
+
 import '../../../../support/enums/units_enum.dart';
 import 'unit_item_view.dart';
 
@@ -9,9 +11,11 @@ class UnitItemViewModel extends UnitItemViewModelProtocol {
   // MARK: - Init
 
   final UnitsEnum unit;
+  final Localization l10n;
   final UnitItemDelegate delegate;
 
   UnitItemViewModel({
+    required this.l10n,
     required this.unit,
     required this.delegate,
   });
@@ -19,7 +23,7 @@ class UnitItemViewModel extends UnitItemViewModelProtocol {
   // MARK: - Public Getters
 
   @override
-  String get name => unit.name;
+  String get name => unit.name(l10n);
 
   // MARK: - Public Methods
 

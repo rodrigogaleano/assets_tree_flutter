@@ -1,3 +1,5 @@
+import 'package:flutter_gen/gen_l10n/localization.dart';
+
 import '../style/app_assets.dart';
 
 enum UnitsEnum {
@@ -5,11 +7,11 @@ enum UnitsEnum {
   tobias,
   apex;
 
-  String get name {
+  String name(Localization l10n) {
     return switch (this) {
-      UnitsEnum.jaguar => 'Jaguar Unit',
-      UnitsEnum.tobias => 'Tobias Unit',
-      UnitsEnum.apex => 'Apex Unit',
+      UnitsEnum.jaguar => l10n.jaguarUnitName,
+      UnitsEnum.tobias => l10n.tobiasUnitName,
+      UnitsEnum.apex => l10n.apexUnitName,
     };
   }
 
