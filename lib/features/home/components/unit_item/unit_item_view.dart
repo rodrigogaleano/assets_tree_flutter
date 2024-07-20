@@ -20,16 +20,22 @@ class UnitItemView extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
           backgroundColor: AppColors.lightBlue,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
         ),
         onPressed: viewModel.didTapUnit,
-        child: Text(
-          viewModel.name,
-          style: AppFonts.robotoSemiBold(18, AppColors.white),
+        child: Row(
+          children: [
+            const Icon(Icons.storage, color: AppColors.white),
+            const SizedBox(width: 16),
+            Text(
+              viewModel.name,
+              style: AppFonts.robotoSemiBold(18, AppColors.white),
+            ),
+          ],
         ),
       ),
     );
