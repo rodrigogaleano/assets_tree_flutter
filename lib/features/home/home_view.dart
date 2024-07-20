@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../support/enums/units_enum.dart';
 import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
+import 'components/unit_item/unit_item_view.dart';
 
-abstract class HomeViewModelProtocol with ChangeNotifier {}
+abstract class HomeViewModelProtocol with ChangeNotifier {
+  List<UnitItemViewModelProtocol> get unitsViewModels;
+}
 
 class HomeView extends StatelessWidget {
   final HomeViewModelProtocol viewModel;
@@ -31,27 +33,11 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
                 SliverList.builder(
-                  itemCount: UnitsEnum.values.length,
+                  itemCount: viewModel.unitsViewModels.length,
                   itemBuilder: (_, index) {
-                    final currentUnit = UnitsEnum.values[index];
+                    final currentViewModel = viewModel.unitsViewModels[index];
 
-                    return Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.all(24),
-                          backgroundColor: AppColors.lightBlue,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () {},
-                        child: Text(
-                          currentUnit.name,
-                          style: AppFonts.robotoSemiBold(18, AppColors.white),
-                        ),
-                      ),
-                    );
+                    return UnitItemView(viewModel: currentViewModel);
                   },
                 ),
               ],
