@@ -1,16 +1,72 @@
 # assets_tree
 
-A new Flutter project.
+Assets Tree é um aplicativo Flutter que visualiza a hierarquia de ativos de uma empresa em uma estrutura de árvore, facilitando o gerenciamento e a manutenção eficiente dos ativos.
 
-## Getting Started
+## Instalação do Projeto
 
-This project is a starting point for a Flutter application.
+**Clonando o Repositório**
 
-A few resources to get you started if this is your first Flutter project:
+Abra o terminal e navegue até o diretório onde você deseja clonar o repositório. Em seguida, execute um dos comandos abaixo:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Com SSH
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git@github.com:rodrigogaleano/assets_tree_flutter.git
+```
+
+Com HTTPS
+
+```bash
+https://github.com/rodrigogaleano/assets_tree_flutter.git
+```
+
+**Instalando as Dependências**
+
+Após clonar o repositório, navegue até o diretório do projeto e instale as dependências necessárias:
+
+```bash
+cd assets_tree
+flutter pub get
+```
+
+## Estrutura do Projeto
+
+```
+assets_tree/
+├── assets/
+│   └── data/
+│       └── sample.json
+├── lib/
+│   ├── features/
+│   │   ├── sample/
+│   │   │   ├── di/
+│   │   │   ├── models/
+│   │   │   │   └── model.dart
+│   │   │   ├── use_cases/
+│   │   │   │   └── sample_use_case.dart
+│   │   │   └── sample_view.dart
+│   │   │   └── sample_view_controller.dart
+│   │   │   └── sample_view_model.dart
+│   ├── support/
+│   │   ├── style/
+│   ├── localization/
+│   └── router/
+├── pubspec.yaml
+└── README.md
+```
+
+- assets/: Contém arquivos de dados, como JSONs.
+- lib/: Contém o código fonte.
+- features/sample/: Funcionalidades relacionadas ao exemplo específico.
+- di/: Injeção de dependências.
+- models/: Modelos de dados utilizados no aplicativo.
+- use_cases/: Casos de uso específicos.
+- sample_view.dart: View da tela do exemplo.
+- sample_view_controller.dart: View Controller da tela do exemplo.
+- sample_view_model.dart: ViewModel da tela do exemplo.
+- support/: Classes de suporte e utilitários.
+- style/: Estilos e temas.
+- localization/: Arquivos de tradução.
+- router/: Configuração de rotas.
+- pubspec.yaml: Arquivo de configuração do Flutter.
+- README.md: Este arquivo de documentação.
