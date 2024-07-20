@@ -13,6 +13,7 @@ void main() {
     MaterialApp.router(
       theme: AppThemes.theme,
       routerConfig: AppRouter.router,
+      debugShowCheckedModeBanner: false,
       supportedLocales: Localization.supportedLocales,
       localizationsDelegates: Localization.localizationsDelegates,
       onGenerateTitle: (context) => Localize.instance.of(context).appTitle,

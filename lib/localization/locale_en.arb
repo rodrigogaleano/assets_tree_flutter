@@ -1,5 +1,10 @@
 {
     "@@locale": "en",
 
-    "appTitle": "Asset Tree"
+    "appTitle": "Asset Tree",
+
+    "homeTitle": "TRACTIAN",
+    "jaguarUnitName": "Jaguar Unit",
+    "tobiasUnitName": "Tobias Unit",
+    "apexUnitName": "Apex Unit"
 }
