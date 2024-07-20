@@ -11,13 +11,13 @@ Abra o terminal e navegue até o diretório onde você deseja clonar o repositó
 Com SSH
 
 ```bash
-git@github.com:rodrigogaleano/asset_tree_flutter.git
+git@github.com:rodrigogaleano/assets_tree_flutter.git
 ```
 
 Com HTTPS
 
 ```bash
-https://github.com/rodrigogaleano/asset_tree_flutter.git
+https://github.com/rodrigogaleano/assets_tree_flutter.git
 ```
 
 **Instalando as Dependências**
