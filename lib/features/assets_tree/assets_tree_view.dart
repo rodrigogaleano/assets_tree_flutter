@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-abstract class AssetsTreeViewModelProtocol {}
+import '../../support/style/app_colors.dart';
+import '../../support/style/app_fonts.dart';
+
+abstract class AssetsTreeViewModelProtocol with ChangeNotifier {}
 
 class AssetsTreeView extends StatelessWidget {
   final AssetsTreeViewModelProtocol viewModel;
@@ -9,6 +12,20 @@ class AssetsTreeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: SafeArea(
+        top: false,
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: Text(
+                'Assets',
+                style: AppFonts.robotoBold(24, AppColors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

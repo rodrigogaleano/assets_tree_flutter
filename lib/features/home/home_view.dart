@@ -25,8 +25,6 @@ class HomeView extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              centerTitle: true,
-              backgroundColor: AppColors.darkBlue,
               title: Text(
                 l10n.homeTitle,
                 style: AppFonts.robotoBold(24, AppColors.white),

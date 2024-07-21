@@ -4,7 +4,9 @@ import '../../support/enums/units_enum.dart';
 import '../../support/service_locator/service_locator.dart';
 import 'assets_tree_view.dart';
 
-abstract class AssetsTreeProtocol extends AssetsTreeViewModelProtocol {}
+abstract class AssetsTreeProtocol extends AssetsTreeViewModelProtocol {
+  void loadContent();
+}
 
 class AssetsTreeViewController extends StatefulWidget {
   final UnitsEnum unit;
@@ -24,6 +26,7 @@ class _AssetsTreeViewControllerState extends State<AssetsTreeViewController> {
   void initState() {
     super.initState();
     viewModel = ServiceLocator.get<AssetsTreeProtocol>(param: widget.unit);
+    viewModel.loadContent();
   }
 
   @override
