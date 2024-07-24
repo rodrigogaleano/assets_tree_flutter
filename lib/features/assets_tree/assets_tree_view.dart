@@ -14,8 +14,9 @@ abstract class AssetsTreeViewModelProtocol with ChangeNotifier {
 
   TextEditingController get searchBarController;
 
-  List<AssetTileViewModelProtocol> get aloneAssetsViewModels;
+  List<AssetTileViewModelProtocol> get unlinkedAssetsViewModels;
   List<LocationTileViewModelProtocol> get locationsViewModels;
+  List<FilterOptionViewModelProtocol> get filterOptionsViewModels;
 }
 
 class AssetsTreeView extends StatelessWidget {
@@ -63,19 +64,12 @@ class AssetsTreeView extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          const Wrap(
+                          Wrap(
                             spacing: 16,
                             runSpacing: 16,
-                            children: [
-                              FilterOption(
-                                text: 'Sensor de Energia',
-                                isSelected: true,
-                              ),
-                              FilterOption(
-                                text: 'Crítico',
-                                isSelected: false,
-                              ),
-                            ],
+                            children: viewModel.filterOptionsViewModels.map((filter) {
+                              return FilterOption(viewModel: filter);
+                            }).toList(),
                           ),
                         ],
                       ),
@@ -125,9 +119,9 @@ class AssetsTreeView extends StatelessWidget {
         },
       ),
       SliverList.builder(
-        itemCount: viewModel.aloneAssetsViewModels.length,
+        itemCount: viewModel.unlinkedAssetsViewModels.length,
         itemBuilder: (_, index) {
-          return AssetTileView(viewModel: viewModel.aloneAssetsViewModels[index]);
+          return AssetTileView(viewModel: viewModel.unlinkedAssetsViewModels[index]);
         },
       ),
     ];

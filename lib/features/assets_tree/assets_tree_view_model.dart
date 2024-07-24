@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../support/enums/filters_enum.dart';
 import '../../support/enums/units_enum.dart';
 import '../../support/utils/debouncer.dart';
 import 'assets_tree_view_controller.dart';
 import 'components/asset_tile/asset_tile_view.dart';
 import 'components/asset_tile/asset_tile_view_model.dart';
+import 'components/filter_option/filter_option_view.dart';
+import 'components/filter_option/filter_option_view_model.dart';
 import 'components/location_tile/location_tile_view.dart';
 import 'components/location_tile/location_tile_view_model.dart';
 import 'models/asset.dart';
@@ -12,16 +15,18 @@ import 'models/location.dart';
 import 'use_cases/get_assets_use_case.dart';
 import 'use_cases/get_locations_use_case.dart';
 
-class AssetsViewModel extends AssetsTreeProtocol {
+class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate {
   // MARK: - Private Properties
 
   bool _isAssetsLoading = false;
   bool _isLocationsLoading = false;
+  int _selectedFilter = 0;
   String _searchQuery = '';
   String _errorMessage = '';
 
   List<Asset> _assets = [];
   List<Location> _locations = [];
+  List<Asset> _filteredAssets = [];
 
   final _debouncer = Debouncer(milliseconds: 1500);
   final _searchBarController = TextEditingController();
@@ -62,12 +67,12 @@ class AssetsViewModel extends AssetsTreeProtocol {
   }
 
   @override
-  List<AssetTileViewModelProtocol> get aloneAssetsViewModels {
-    final aloneAssets = _assets.where((asset) {
+  List<AssetTileViewModelProtocol> get unlinkedAssetsViewModels {
+    final unlinkedAssets = _assets.where((asset) {
       return asset.locationId == null && asset.parentId == null;
     }).toList();
 
-    return aloneAssets.map((asset) {
+    return unlinkedAssets.map((asset) {
       return AssetTileViewModel(asset: asset);
     }).toList();
   }
@@ -75,11 +80,39 @@ class AssetsViewModel extends AssetsTreeProtocol {
   @override
   TextEditingController get searchBarController => _searchBarController;
 
+  @override
+  List<FilterOptionViewModelProtocol> get filterOptionsViewModels {
+    return FiltersEnum.values.map((filter) {
+      return FilterOptionViewModel(
+        filter: filter,
+        delegate: this,
+        groupValue: _selectedFilter,
+      );
+    }).toList();
+  }
+
   // MARK: - Public Methods
 
   @override
   void loadContent() {
     _getLocations();
+  }
+
+  // MARK: - FilterOptionDelegate
+
+  @override
+  void didChangeFilterOption(int selectedValue) {
+    _selectedFilter = selectedValue;
+
+    if (selectedValue == 1) {
+      _filteredAssets = _assets.where((asset) => asset.sensorType == 'energy').toList();
+    } else if (selectedValue == 2) {
+      _filteredAssets = _assets.where((asset) => asset.status == 'alert').toList();
+    } else {
+      _filteredAssets = [];
+    }
+
+    notifyListeners();
   }
 
   // MARK: - Private Methods

@@ -11,28 +11,24 @@ abstract class FilterOptionViewModelProtocol {
 }
 
 class FilterOption extends StatelessWidget {
-  // final FilterOptionViewModelProtocol viewModel;
-  final String text;
-  final bool isSelected;
+  final FilterOptionViewModelProtocol viewModel;
 
   const FilterOption({
-    // required this.viewModel,
-    required this.text,
-    required this.isSelected,
+    required this.viewModel,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: viewModel.didChangeOption,
+      onTap: viewModel.didChangeOption,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.lightBlue : AppColors.white,
+          color: viewModel.isSelected ? AppColors.lightBlue : AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.lightBlue : AppColors.gray,
+            color: viewModel.isSelected ? AppColors.lightBlue : AppColors.gray,
           ),
         ),
         child: Row(
@@ -40,10 +36,10 @@ class FilterOption extends StatelessWidget {
           children: [
             Icon(
               Icons.flash_on_outlined,
-              color: isSelected ? AppColors.white : AppColors.gray,
+              color: viewModel.isSelected ? AppColors.white : AppColors.gray,
             ),
             Text(
-              text,
+              viewModel.text,
               style: textStyle,
             ),
           ],
@@ -53,7 +49,7 @@ class FilterOption extends StatelessWidget {
   }
 
   TextStyle get textStyle {
-    if (isSelected) {
+    if (viewModel.isSelected) {
       return AppFonts.robotoSemiBold(14, AppColors.white);
     }
     return AppFonts.robotoRegular(14, AppColors.gray);
