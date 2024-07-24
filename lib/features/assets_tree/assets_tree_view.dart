@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../localization/localize.dart';
+import '../../support/service_locator/service_locator.dart';
 import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
 import 'components/asset_tile/asset_tile_view.dart';
@@ -20,6 +22,8 @@ class AssetsTreeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = ServiceLocator.get<LocalizeProtocol>().l10n;
+
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -30,7 +34,7 @@ class AssetsTreeView extends StatelessWidget {
               slivers: [
                 SliverAppBar(
                   title: Text(
-                    'Assets',
+                    l10n.assetsTitle,
                     style: AppFonts.robotoBold(24, AppColors.white),
                   ),
                 ),

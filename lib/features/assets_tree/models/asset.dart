@@ -19,14 +19,3 @@ class Asset {
     return maps.map((asset) => Asset.fromMap(asset)).toList();
   }
 }
-
-  
-  
-  // {
-  //   "name": "Asset 18",
-  //   "id": "60fc7ca686cd05001d22b4d8",
-  //   "locationId": "60fc7c9e86cd05001d22b4d5",
-  //   "parentId": null,
-  //   "sensorType": null,
-  //   "status": null
-  // },

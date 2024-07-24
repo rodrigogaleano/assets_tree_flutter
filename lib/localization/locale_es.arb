@@ -4,7 +4,10 @@
     "appTitle": "Asset Tree",
 
     "homeTitle": "TRACTIAN",
+    
     "jaguarUnitName": "Jaguar Unit",
     "tobiasUnitName": "Tobias Unit",
-    "apexUnitName": "Apex Unit"
+    "apexUnitName": "Apex Unit",
+
+    "assetsTitle": "Assets"
 }
