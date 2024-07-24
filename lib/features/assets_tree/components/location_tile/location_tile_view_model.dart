@@ -12,4 +12,11 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
 
   @override
   String get title => location.name;
+
+  @override
+  List<String> get assetsTitles {
+    return location.assets.map((asset) {
+      return asset.name;
+    }).toList();
+  }
 }

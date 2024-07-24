@@ -1,7 +1,10 @@
+import 'asset.dart';
+
 class Location {
   String id;
   String name;
   String? parentId;
+  List<Asset> assets = [];
 
   Location.fromMap(Map<String, dynamic> map)
       : id = map['id'],
