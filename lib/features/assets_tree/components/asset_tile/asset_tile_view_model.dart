@@ -11,6 +11,11 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
   // MARK: - Public Getters
 
   @override
+  bool get isComponent {
+    return asset.sensorType != null;
+  }
+
+  @override
   String get title => asset.name;
 
   @override

@@ -2,6 +2,13 @@ class AppAssets {
   AppAssets._();
 
   static const String _dataPath = 'assets/data';
+  static const String _imagePath = 'assets/images';
+
+  // MARK: - Icons
+
+  static const String icAsset = '$_imagePath/ic_asset.png';
+  static const String icLocation = '$_imagePath/ic_location.png';
+  static const String icComponent = '$_imagePath/ic_component.png';
 
   // MARK: - Data
 

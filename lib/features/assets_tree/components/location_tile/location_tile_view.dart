@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../support/style/app_assets.dart';
 import '../../../../support/style/app_colors.dart';
 import '../../../../support/style/app_fonts.dart';
 import '../asset_tile/asset_tile_view.dart';
@@ -21,10 +22,7 @@ class LocationTileView extends StatelessWidget {
       return ListTile(
         title: Row(
           children: [
-            const Icon(
-              Icons.location_on_outlined,
-              color: AppColors.lightBlue,
-            ),
+            Image.asset(AppAssets.icLocation),
             const SizedBox(width: 8),
             Text(
               viewModel.title,
@@ -39,10 +37,7 @@ class LocationTileView extends StatelessWidget {
       childrenPadding: const EdgeInsets.only(left: 16),
       title: Row(
         children: [
-          const Icon(
-            Icons.location_on_outlined,
-            color: AppColors.lightBlue,
-          ),
+          Image.asset(AppAssets.icLocation),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../../../../support/style/app_assets.dart';
 import '../../../../support/style/app_colors.dart';
 import '../../../../support/style/app_fonts.dart';
 
 abstract class AssetTileViewModelProtocol {
   String get title;
+  bool get isComponent;
   List<AssetTileViewModelProtocol> get subAssetsViewModels;
 }
 
@@ -15,14 +17,14 @@ class AssetTileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final icon = viewModel.isComponent ? AppAssets.icComponent : AppAssets.icAsset;
+
     if (viewModel.subAssetsViewModels.isEmpty) {
       return ListTile(
+        contentPadding: const EdgeInsets.only(left: 32),
         title: Row(
           children: [
-            const Icon(
-              Icons.widgets_outlined,
-              color: AppColors.lightBlue,
-            ),
+            Image.asset(icon),
             const SizedBox(width: 8),
             Text(
               viewModel.title,
@@ -38,10 +40,7 @@ class AssetTileView extends StatelessWidget {
       title: ListTile(
         title: Row(
           children: [
-            const Icon(
-              Icons.widgets_outlined,
-              color: AppColors.lightBlue,
-            ),
+            Image.asset(icon),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
