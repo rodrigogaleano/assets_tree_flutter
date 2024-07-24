@@ -21,7 +21,7 @@ class AssetTileView extends StatelessWidget {
 
     if (viewModel.subAssetsViewModels.isEmpty) {
       return ListTile(
-        contentPadding: const EdgeInsets.only(left: 32),
+        contentPadding: const EdgeInsets.only(left: 16),
         title: Row(
           children: [
             Image.asset(icon),
@@ -52,7 +52,10 @@ class AssetTileView extends StatelessWidget {
         ),
       ),
       children: viewModel.subAssetsViewModels.map((subAssetViewModel) {
-        return AssetTileView(viewModel: subAssetViewModel);
+        return Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: AssetTileView(viewModel: subAssetViewModel),
+        );
       }).toList(),
     );
   }

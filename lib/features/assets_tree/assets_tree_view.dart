@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
+import 'components/asset_tile/asset_tile_view.dart';
 import 'components/location_tile/location_tile_view.dart';
 
 abstract class AssetsTreeViewModelProtocol with ChangeNotifier {
+  List<AssetTileViewModelProtocol> get aloneAssetsViewModels;
   List<LocationTileViewModelProtocol> get locationsViewModels;
 }
 
@@ -35,6 +37,12 @@ class AssetsTreeView extends StatelessWidget {
                     return LocationTileView(
                       viewModel: viewModel.locationsViewModels[index],
                     );
+                  },
+                ),
+                SliverList.builder(
+                  itemCount: viewModel.aloneAssetsViewModels.length,
+                  itemBuilder: (_, index) {
+                    return AssetTileView(viewModel: viewModel.aloneAssetsViewModels[index]);
                   },
                 ),
               ],

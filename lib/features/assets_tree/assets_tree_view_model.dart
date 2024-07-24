@@ -1,5 +1,7 @@
 import '../../support/enums/units_enum.dart';
 import 'assets_tree_view_controller.dart';
+import 'components/asset_tile/asset_tile_view.dart';
+import 'components/asset_tile/asset_tile_view_model.dart';
 import 'components/location_tile/location_tile_view.dart';
 import 'components/location_tile/location_tile_view_model.dart';
 import 'models/asset.dart';
@@ -35,6 +37,17 @@ class AssetsViewModel extends AssetsTreeProtocol {
   List<LocationTileViewModelProtocol> get locationsViewModels {
     return _locations.map((location) {
       return LocationTileViewModel(location: location);
+    }).toList();
+  }
+
+  @override
+  List<AssetTileViewModelProtocol> get aloneAssetsViewModels {
+    final aloneAssets = _assets.where((asset) {
+      return asset.locationId == null && asset.parentId == null;
+    }).toList();
+
+    return aloneAssets.map((asset) {
+      return AssetTileViewModel(asset: asset);
     }).toList();
   }
 
