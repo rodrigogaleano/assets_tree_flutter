@@ -19,4 +19,11 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
       return asset.name;
     }).toList();
   }
+
+  @override
+  List<LocationTileViewModelProtocol> get subLocationsViewModels {
+    return location.subLocations.map((subLocation) {
+      return LocationTileViewModel(location: subLocation);
+    }).toList();
+  }
 }

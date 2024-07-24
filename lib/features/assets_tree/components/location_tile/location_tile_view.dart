@@ -6,6 +6,7 @@ import '../../../../support/style/app_fonts.dart';
 abstract class LocationTileViewModelProtocol {
   String get title;
   List<String> get assetsTitles;
+  List<LocationTileViewModelProtocol> get subLocationsViewModels;
 }
 
 class LocationTileView extends StatelessWidget {
@@ -15,7 +16,7 @@ class LocationTileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (viewModel.assetsTitles.isEmpty) {
+    if (viewModel.assetsTitles.isEmpty && viewModel.subLocationsViewModels.isEmpty) {
       return ListTile(
         title: Row(
           children: [
@@ -50,23 +51,28 @@ class LocationTileView extends StatelessWidget {
           ),
         ],
       ),
-      children: viewModel.assetsTitles.map((assetTitle) {
-        return ListTile(
-          title: Row(
-            children: [
-              const Icon(
-                Icons.widgets_outlined,
-                color: AppColors.lightBlue,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                assetTitle,
-                style: AppFonts.robotoRegular(14, AppColors.darkBlue),
-              ),
-            ],
-          ),
-        );
-      }).toList(),
+      children: [
+        ...viewModel.subLocationsViewModels.map((subLocationViewModel) {
+          return LocationTileView(viewModel: subLocationViewModel);
+        }),
+        ...viewModel.assetsTitles.map((assetTitle) {
+          return ListTile(
+            title: Row(
+              children: [
+                const Icon(
+                  Icons.widgets_outlined,
+                  color: AppColors.lightBlue,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  assetTitle,
+                  style: AppFonts.robotoRegular(14, AppColors.darkBlue),
+                ),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 }

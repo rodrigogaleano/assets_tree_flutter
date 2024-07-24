@@ -5,6 +5,7 @@ class Location {
   String name;
   String? parentId;
   List<Asset> assets = [];
+  List<Location> subLocations = [];
 
   Location.fromMap(Map<String, dynamic> map)
       : id = map['id'],

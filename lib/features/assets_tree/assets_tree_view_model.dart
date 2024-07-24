@@ -89,6 +89,24 @@ class AssetsViewModel extends AssetsTreeProtocol {
     for (final location in _locations) {
       location.assets = locationAssetsMap[location.id] ?? [];
     }
+
+    _combineSubLocationsAndLocations();
+  }
+
+  void _combineSubLocationsAndLocations() {
+    final subLocations = <Location>[];
+    final locationMap = <String, Location>{
+      for (final location in _locations) location.id: location,
+    };
+
+    for (final location in _locations) {
+      if (location.parentId != null && locationMap.containsKey(location.parentId)) {
+        locationMap[location.parentId]?.subLocations.add(location);
+        subLocations.add(location);
+      }
+    }
+
+    _locations.removeWhere((location) => subLocations.contains(location));
   }
 
   void _setLocationsLoading(bool isLoading) {
