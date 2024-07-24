@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../../support/enums/units_enum.dart';
+import '../../support/utils/debouncer.dart';
 import 'assets_tree_view_controller.dart';
 import 'components/asset_tile/asset_tile_view.dart';
 import 'components/asset_tile/asset_tile_view_model.dart';
@@ -14,10 +17,14 @@ class AssetsViewModel extends AssetsTreeProtocol {
 
   bool _isAssetsLoading = false;
   bool _isLocationsLoading = false;
+  String _searchQuery = '';
   String _errorMessage = '';
 
   List<Asset> _assets = [];
   List<Location> _locations = [];
+
+  final _debouncer = Debouncer(milliseconds: 1500);
+  final _searchBarController = TextEditingController();
 
   // MARK: - Init
 
@@ -29,7 +36,15 @@ class AssetsViewModel extends AssetsTreeProtocol {
     required this.unit,
     required this.getAssetsUseCase,
     required this.getLocationsUseCase,
-  });
+  }) {
+    _searchBarController.addListener(() {
+      _searchQuery = _searchBarController.text;
+      if (_searchQuery.isNotEmpty) {
+        _debouncer.run(_searchItems);
+      }
+      notifyListeners();
+    });
+  }
 
   // MARK: - Public Getters
 
@@ -56,6 +71,9 @@ class AssetsViewModel extends AssetsTreeProtocol {
       return AssetTileViewModel(asset: asset);
     }).toList();
   }
+
+  @override
+  TextEditingController get searchBarController => _searchBarController;
 
   // MARK: - Public Methods
 
@@ -153,5 +171,9 @@ class AssetsViewModel extends AssetsTreeProtocol {
   void _setAssetsLoading(bool isLoading) {
     _isAssetsLoading = isLoading;
     notifyListeners();
+  }
+
+  void _searchItems() {
+    // TODO: Filtrar itens
   }
 }
