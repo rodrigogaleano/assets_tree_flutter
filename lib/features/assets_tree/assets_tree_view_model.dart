@@ -34,6 +34,12 @@ class AssetsViewModel extends AssetsTreeProtocol {
   // MARK: - Public Getters
 
   @override
+  bool get isLoading => _isLocationsLoading || _isAssetsLoading;
+
+  @override
+  String get errorMessage => _errorMessage;
+
+  @override
   List<LocationTileViewModelProtocol> get locationsViewModels {
     return _locations.map((location) {
       return LocationTileViewModel(location: location);
