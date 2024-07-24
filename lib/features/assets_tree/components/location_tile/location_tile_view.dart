@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../support/style/app_colors.dart';
 import '../../../../support/style/app_fonts.dart';
+import '../asset_tile/asset_tile_view.dart';
 
 abstract class LocationTileViewModelProtocol {
   String get title;
-  List<String> get assetsTitles;
+  List<AssetTileViewModelProtocol> get assetsViewModels;
   List<LocationTileViewModelProtocol> get subLocationsViewModels;
 }
 
@@ -16,7 +17,7 @@ class LocationTileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (viewModel.assetsTitles.isEmpty && viewModel.subLocationsViewModels.isEmpty) {
+    if (viewModel.assetsViewModels.isEmpty && viewModel.subLocationsViewModels.isEmpty) {
       return ListTile(
         title: Row(
           children: [
@@ -55,22 +56,8 @@ class LocationTileView extends StatelessWidget {
         ...viewModel.subLocationsViewModels.map((subLocationViewModel) {
           return LocationTileView(viewModel: subLocationViewModel);
         }),
-        ...viewModel.assetsTitles.map((assetTitle) {
-          return ListTile(
-            title: Row(
-              children: [
-                const Icon(
-                  Icons.widgets_outlined,
-                  color: AppColors.lightBlue,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  assetTitle,
-                  style: AppFonts.robotoRegular(14, AppColors.darkBlue),
-                ),
-              ],
-            ),
-          );
+        ...viewModel.assetsViewModels.map((assetViewModel) {
+          return AssetTileView(viewModel: assetViewModel);
         }),
       ],
     );

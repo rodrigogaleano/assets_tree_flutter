@@ -66,11 +66,28 @@ class AssetsViewModel extends AssetsTreeProtocol {
       jsonPath: unit.assetsPath,
       success: (assets) {
         _assets = assets;
-        _combineAssetsAndLocations();
+        _combineSubAssetsAndAssets();
       },
       failure: (error) => _errorMessage = error,
       onComplete: () => _setAssetsLoading(false),
     );
+  }
+
+  void _combineSubAssetsAndAssets() {
+    final subAssets = <Asset>[];
+    final assetMap = <String, Asset>{
+      for (final asset in _assets) asset.id: asset,
+    };
+
+    for (final asset in _assets) {
+      if (asset.parentId != null && assetMap.containsKey(asset.parentId)) {
+        assetMap[asset.parentId]?.subAssets.add(asset);
+        subAssets.add(asset);
+      }
+    }
+
+    _assets.removeWhere((asset) => subAssets.contains(asset));
+    _combineAssetsAndLocations();
   }
 
   void _combineAssetsAndLocations() {
