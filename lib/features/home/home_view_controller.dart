@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../router/app_router.dart';
 import '../../support/enums/units_enum.dart';
 import '../../support/service_locator/service_locator.dart';
 import 'home_view.dart';
@@ -35,8 +37,7 @@ class _HomeViewControllerState extends State<HomeViewController> {
 
   void _bind() {
     viewModel.onTapUnit = (unit) {
-      // TODO: Navegar para a tela de detalhes da unidade
-      print('Tapped on unit: $unit');
+      context.pushNamed(AppRouter.assetsTreeRoute, extra: unit);
     };
   }
 }

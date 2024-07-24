@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 
+import '../../features/assets_tree/di/assets_tree_module.dart';
 import '../../features/home/di/home_module.dart';
 import 'app_module.dart';
 import 'commos_module.dart';
@@ -47,6 +48,7 @@ void initializeDependencies() {
   final appModules = <AppModule>[
     CommonsModule(),
     HomeModule(),
+    AssetsTreeModule(),
   ];
 
   for (final module in appModules) {
