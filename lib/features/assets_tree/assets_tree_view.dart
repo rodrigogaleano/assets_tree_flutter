@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
+import 'components/location_tile/location_tile_view.dart';
 
-abstract class AssetsTreeViewModelProtocol with ChangeNotifier {}
+abstract class AssetsTreeViewModelProtocol with ChangeNotifier {
+  List<LocationTileViewModelProtocol> get locationsViewModels;
+}
 
 class AssetsTreeView extends StatelessWidget {
   final AssetsTreeViewModelProtocol viewModel;
@@ -15,15 +18,28 @@ class AssetsTreeView extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         top: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              title: Text(
-                'Assets',
-                style: AppFonts.robotoBold(24, AppColors.white),
-              ),
-            ),
-          ],
+        child: ListenableBuilder(
+          listenable: viewModel,
+          builder: (_, __) {
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  title: Text(
+                    'Assets',
+                    style: AppFonts.robotoBold(24, AppColors.white),
+                  ),
+                ),
+                SliverList.builder(
+                  itemCount: viewModel.locationsViewModels.length,
+                  itemBuilder: (_, index) {
+                    return LocationTileView(
+                      viewModel: viewModel.locationsViewModels[index],
+                    );
+                  },
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

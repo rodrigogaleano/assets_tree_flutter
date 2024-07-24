@@ -1,5 +1,7 @@
 import '../../support/enums/units_enum.dart';
 import 'assets_tree_view_controller.dart';
+import 'components/location_tile/location_tile_view.dart';
+import 'components/location_tile/location_tile_view_model.dart';
 import 'models/location.dart';
 import 'use_cases/get_locations_use_case.dart';
 
@@ -16,6 +18,15 @@ class AssetsViewModel extends AssetsTreeProtocol {
   final GetLocationsUseCaseProtocol getLocationsUseCase;
 
   AssetsViewModel({required this.unit, required this.getLocationsUseCase});
+
+  // MARK: - Public Getters
+
+  @override
+  List<LocationTileViewModelProtocol> get locationsViewModels {
+    return _locations.map((location) {
+      return LocationTileViewModel(location: location);
+    }).toList();
+  }
 
   // MARK: - Public Methods
 
