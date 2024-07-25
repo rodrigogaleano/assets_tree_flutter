@@ -27,7 +27,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
   List<Asset> _assets = [];
   List<Location> _locations = [];
 
-  final _debouncer = Debouncer(milliseconds: 1500);
+  final _debouncer = Debouncer(milliseconds: 500);
   final _searchBarController = TextEditingController();
 
   // MARK: - Init
@@ -67,6 +67,10 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       filteredLocations = _filterLocationsByCriticalSensor(filteredLocations);
     }
 
+    if (_searchQuery.isNotEmpty) {
+      filteredLocations = _filterLocationsBySearchQuery(filteredLocations, _searchQuery);
+    }
+
     return filteredLocations.map((location) {
       return LocationTileViewModel(
         location: location,
@@ -88,6 +92,10 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       filteredAssets = _filterAssetsByEnergySensor(filteredAssets);
     } else if (FiltersEnum.fromKey(_selectedFilter) == FiltersEnum.critical) {
       filteredAssets = _filterAssetsByCriticalSensor(filteredAssets);
+    }
+
+    if (_searchQuery.isNotEmpty) {
+      filteredAssets = _filterAssetsBySearchQuery(filteredAssets, _searchQuery);
     }
 
     return filteredAssets.map((asset) {
@@ -132,7 +140,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
   // MARK: - Private Getters
 
   bool get _isExpansionLocked {
-    return _selectedFilter != 0;
+    return _selectedFilter != 0 || _searchQuery.isNotEmpty;
   }
 
   // MARK: - Private Methods
@@ -224,7 +232,6 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   List<Location> _filterLocationsByEnergySensor(List<Location> locations) {
     bool hasEnergySensorInSubLocations(Location location) {
-      // Verifica se alguma sublocalização ou suas sublocalizações tem o sensor de energia
       for (final subLocation in location.subLocations) {
         if (subLocation.assets.any((asset) => asset.isEnergySensor) || hasEnergySensorInSubLocations(subLocation)) {
           return true;
@@ -245,7 +252,6 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   List<Location> _filterLocationsByCriticalSensor(List<Location> locations) {
     bool hasCriticalSensorInSubLocations(Location location) {
-      // Verifica se alguma sublocalização ou suas sublocalizações tem o sensor crítico
       for (final subLocation in location.subLocations) {
         if (subLocation.assets.any((asset) => asset.isCriticalSensor) || hasCriticalSensorInSubLocations(subLocation)) {
           return true;
@@ -261,6 +267,39 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
           location.assets.any((asset) => asset.subAssets.any((subAsset) => subAsset.isCriticalSensor));
 
       return hasCriticalAsset || hasSubLocationWithCriticalAsset || hasAssetWithSubAssetCritical;
+    }).toList();
+  }
+
+  List<Location> _filterLocationsBySearchQuery(List<Location> locations, String query) {
+    bool matchesQuery(String name, String query) {
+      return name.toLowerCase().contains(query.toLowerCase());
+    }
+
+    bool hasMatchingAssetInSubLocations(Location location, String query) {
+      for (final subLocation in location.subLocations) {
+        if (subLocation.assets.any((asset) => matchesQuery(asset.name, query)) ||
+            hasMatchingAssetInSubLocations(subLocation, query)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return locations.where((location) {
+      final hasMatchingAsset = location.assets.any((asset) => matchesQuery(asset.name, query));
+      final hasSubLocationWithMatchingAsset = hasMatchingAssetInSubLocations(location, query);
+      final hasAssetWithSubAssetMatching =
+          location.assets.any((asset) => asset.subAssets.any((subAsset) => matchesQuery(subAsset.name, query)));
+
+      return hasMatchingAsset || hasSubLocationWithMatchingAsset || hasAssetWithSubAssetMatching;
+    }).toList();
+  }
+
+  List<Asset> _filterAssetsBySearchQuery(List<Asset> assets, String query) {
+    return assets.where((asset) {
+      final hasMatchingSubAsset =
+          asset.subAssets.any((subAsset) => subAsset.name.toLowerCase().contains(query.toLowerCase()));
+      return asset.name.toLowerCase().contains(query.toLowerCase()) || hasMatchingSubAsset;
     }).toList();
   }
 
