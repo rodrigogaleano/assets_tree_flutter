@@ -9,5 +9,10 @@
     "tobiasUnitName": "Tobias Unit",
     "apexUnitName": "Apex Unit",
 
-    "assetsTitle": "Assets"
+    "assetsTitle": "Assets",
+    "assetsSearchBarHintText": "Search Asset or Location",
+    "assetsNoResultsLabel": "No results found",
+    
+    "filterEnergyInputTitle": "Energy Sensor",
+    "filterCritialInputTitle": "Critical"
 }

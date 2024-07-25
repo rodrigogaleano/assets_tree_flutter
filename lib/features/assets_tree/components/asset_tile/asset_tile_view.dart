@@ -5,8 +5,13 @@ import '../../../../support/style/app_colors.dart';
 import '../../../../support/style/app_fonts.dart';
 
 abstract class AssetTileViewModelProtocol {
-  String get title;
   bool get isComponent;
+  bool get hasEnergySensor;
+  bool get hasCriticalSensor;
+  bool get isExpansionLocked;
+
+  String get title;
+
   List<AssetTileViewModelProtocol> get subAssetsViewModels;
 }
 
@@ -30,12 +35,35 @@ class AssetTileView extends StatelessWidget {
               viewModel.title,
               style: AppFonts.robotoRegular(14, AppColors.darkBlue),
             ),
+            Visibility(
+              visible: viewModel.hasEnergySensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.flash_on_rounded,
+                  size: 12,
+                  color: AppColors.green,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.hasCriticalSensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.red,
+                ),
+              ),
+            ),
           ],
         ),
       );
     }
 
     return ExpansionTile(
+      initiallyExpanded: viewModel.isExpansionLocked,
       childrenPadding: const EdgeInsets.only(left: 16),
       title: ListTile(
         title: Row(
@@ -46,6 +74,28 @@ class AssetTileView extends StatelessWidget {
               child: Text(
                 viewModel.title,
                 style: AppFonts.robotoRegular(14, AppColors.darkBlue),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.hasEnergySensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.flash_on_rounded,
+                  size: 12,
+                  color: AppColors.green,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.hasCriticalSensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.red,
+                ),
               ),
             ),
           ],

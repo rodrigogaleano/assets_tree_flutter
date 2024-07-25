@@ -1,3 +1,4 @@
+import '../../../localization/localize.dart';
 import '../../../support/enums/units_enum.dart';
 import '../../../support/service_locator/app_module.dart';
 import '../../../support/service_locator/service_locator.dart';
@@ -24,6 +25,7 @@ class AssetsTreeModule extends AppModule {
     ServiceLocator.registerFactoryParam<AssetsTreeProtocol, UnitsEnum>((unit) {
       return AssetsViewModel(
         unit: unit,
+        l10n: ServiceLocator.get<LocalizeProtocol>().l10n,
         getAssetsUseCase: ServiceLocator.get<GetAssetsUseCaseProtocol>(),
         getLocationsUseCase: ServiceLocator.get<GetLocationsUseCaseProtocol>(),
       );

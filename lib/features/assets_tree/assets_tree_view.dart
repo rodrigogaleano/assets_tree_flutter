@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/localization.dart';
 
 import '../../localization/localize.dart';
 import '../../support/service_locator/service_locator.dart';
 import '../../support/style/app_colors.dart';
 import '../../support/style/app_fonts.dart';
 import 'components/asset_tile/asset_tile_view.dart';
+import 'components/asset_tree_app_bar.dart';
+import 'components/filter_option/filter_option_view.dart';
 import 'components/location_tile/location_tile_view.dart';
 
 abstract class AssetsTreeViewModelProtocol with ChangeNotifier {
   bool get isLoading;
   String get errorMessage;
-
-  List<AssetTileViewModelProtocol> get aloneAssetsViewModels;
+  TextEditingController get searchBarController;
   List<LocationTileViewModelProtocol> get locationsViewModels;
+  List<AssetTileViewModelProtocol> get unlinkedAssetsViewModels;
+  List<FilterOptionViewModelProtocol> get filterOptionsViewModels;
 }
 
 class AssetsTreeView extends StatelessWidget {
@@ -32,13 +36,12 @@ class AssetsTreeView extends StatelessWidget {
           builder: (_, __) {
             return CustomScrollView(
               slivers: [
-                SliverAppBar(
-                  title: Text(
-                    l10n.assetsTitle,
-                    style: AppFonts.robotoBold(24, AppColors.white),
-                  ),
+                AssetTreeAppBar(
+                  l10n: l10n,
+                  searchBarController: viewModel.searchBarController,
+                  filterOptionsViewModels: viewModel.filterOptionsViewModels,
                 ),
-                ..._bodySlivers,
+                ..._bodySlivers(l10n),
               ],
             );
           },
@@ -47,7 +50,7 @@ class AssetsTreeView extends StatelessWidget {
     );
   }
 
-  List<Widget> get _bodySlivers {
+  List<Widget> _bodySlivers(Localization l10n) {
     if (viewModel.isLoading) {
       return [
         const SliverFillRemaining(
@@ -71,6 +74,19 @@ class AssetsTreeView extends StatelessWidget {
       ];
     }
 
+    if (viewModel.locationsViewModels.isEmpty && viewModel.unlinkedAssetsViewModels.isEmpty) {
+      return [
+        SliverFillRemaining(
+          child: Center(
+            child: Text(
+              l10n.assetsNoResultsLabel,
+              style: AppFonts.robotoRegular(16, AppColors.darkBlue),
+            ),
+          ),
+        ),
+      ];
+    }
+
     return [
       SliverList.builder(
         itemCount: viewModel.locationsViewModels.length,
@@ -81,9 +97,9 @@ class AssetsTreeView extends StatelessWidget {
         },
       ),
       SliverList.builder(
-        itemCount: viewModel.aloneAssetsViewModels.length,
+        itemCount: viewModel.unlinkedAssetsViewModels.length,
         itemBuilder: (_, index) {
-          return AssetTileView(viewModel: viewModel.aloneAssetsViewModels[index]);
+          return AssetTileView(viewModel: viewModel.unlinkedAssetsViewModels[index]);
         },
       ),
     ];
