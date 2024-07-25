@@ -245,10 +245,13 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     }
 
     return locations.where((location) {
-      final hasEnergyAsset = location.assets.any((asset) => asset.isEnergySensor);
+      final hasEnergyAsset = location.assets.any((asset) {
+        return asset.isEnergySensor;
+      });
       final hasSubLocationWithEnergyAsset = hasEnergySensorInSubLocations(location);
-      final hasAssetWithSubAssetEnergy =
-          location.assets.any((asset) => asset.subAssets.any((subAsset) => subAsset.isEnergySensor));
+      final hasAssetWithSubAssetEnergy = location.assets.any((asset) {
+        return asset.subAssets.any((subAsset) => subAsset.isEnergySensor);
+      });
 
       return hasEnergyAsset || hasSubLocationWithEnergyAsset || hasAssetWithSubAssetEnergy;
     }).toList();
@@ -265,10 +268,13 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     }
 
     return locations.where((location) {
-      final hasCriticalAsset = location.assets.any((asset) => asset.isCriticalSensor);
+      final hasCriticalAsset = location.assets.any((asset) {
+        return asset.isCriticalSensor;
+      });
       final hasSubLocationWithCriticalAsset = hasCriticalSensorInSubLocations(location);
-      final hasAssetWithSubAssetCritical =
-          location.assets.any((asset) => asset.subAssets.any((subAsset) => subAsset.isCriticalSensor));
+      final hasAssetWithSubAssetCritical = location.assets.any((asset) {
+        return asset.subAssets.any((subAsset) => subAsset.isCriticalSensor);
+      });
 
       return hasCriticalAsset || hasSubLocationWithCriticalAsset || hasAssetWithSubAssetCritical;
     }).toList();
@@ -290,10 +296,13 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     }
 
     return locations.where((location) {
-      final hasMatchingAsset = location.assets.any((asset) => matchesQuery(asset.name, query));
+      final hasMatchingAsset = location.assets.any((asset) {
+        return matchesQuery(asset.name, query);
+      });
       final hasSubLocationWithMatchingAsset = hasMatchingAssetInSubLocations(location, query);
-      final hasAssetWithSubAssetMatching =
-          location.assets.any((asset) => asset.subAssets.any((subAsset) => matchesQuery(subAsset.name, query)));
+      final hasAssetWithSubAssetMatching = location.assets.any((asset) {
+        return asset.subAssets.any((subAsset) => matchesQuery(subAsset.name, query));
+      });
 
       return hasMatchingAsset || hasSubLocationWithMatchingAsset || hasAssetWithSubAssetMatching;
     }).toList();
