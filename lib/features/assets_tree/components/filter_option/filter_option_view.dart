@@ -5,6 +5,7 @@ import '../../../../support/style/app_fonts.dart';
 
 abstract class FilterOptionViewModelProtocol {
   String get text;
+  IconData get icon;
   bool get isSelected;
 
   void didChangeOption();
@@ -20,24 +21,30 @@ class FilterOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = viewModel.isSelected ? AppColors.white : AppColors.gray;
+    final borderColor = viewModel.isSelected ? AppColors.lightBlue : AppColors.gray;
+    final backgroundColor = viewModel.isSelected ? AppColors.lightBlue : AppColors.white;
+    final textStyle = viewModel.isSelected
+        ? AppFonts.robotoSemiBold(14, AppColors.white)
+        : AppFonts.robotoRegular(14, AppColors.gray);
+
     return GestureDetector(
       onTap: viewModel.didChangeOption,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: viewModel.isSelected ? AppColors.lightBlue : AppColors.white,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: viewModel.isSelected ? AppColors.lightBlue : AppColors.gray,
-          ),
+          border: Border.all(color: borderColor),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.flash_on_outlined,
-              color: viewModel.isSelected ? AppColors.white : AppColors.gray,
+              viewModel.icon,
+              color: iconColor,
             ),
+            const SizedBox(width: 8),
             Text(
               viewModel.text,
               style: textStyle,
@@ -46,12 +53,5 @@ class FilterOption extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  TextStyle get textStyle {
-    if (viewModel.isSelected) {
-      return AppFonts.robotoSemiBold(14, AppColors.white);
-    }
-    return AppFonts.robotoRegular(14, AppColors.gray);
   }
 }

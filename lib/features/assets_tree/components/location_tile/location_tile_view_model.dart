@@ -1,4 +1,5 @@
 import '../../../../support/enums/filters_enum.dart';
+import '../../models/asset.dart';
 import '../../models/location.dart';
 import '../asset_tile/asset_tile_view.dart';
 import '../asset_tile/asset_tile_view_model.dart';
@@ -9,70 +10,94 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
 
   final int filterOption;
   final Location location;
+  final bool lockExpansion;
 
   LocationTileViewModel({
     required this.location,
     required this.filterOption,
+    required this.lockExpansion,
   });
 
   // MARK: - Public Getters
+
+  @override
+  bool get isExpansionLocked => lockExpansion;
 
   @override
   String get title => location.name;
 
   @override
   List<AssetTileViewModelProtocol> get assetsViewModels {
-    if (FiltersEnum.fromKey(filterOption) == FiltersEnum.energy) {
-      return location.assets.where((asset) {
-        return asset.subAssets.any((subAsset) {
-              return subAsset.isEnergySensor;
-            }) ||
-            asset.isEnergySensor;
-      }).map((asset) {
-        return AssetTileViewModel(asset: asset, filterOption: filterOption);
-      }).toList();
+    bool hasSensor(Asset asset, bool Function(Asset) sensorCheck) {
+      return sensorCheck(asset) || asset.subAssets.any(sensorCheck);
     }
 
-    if (FiltersEnum.fromKey(filterOption) == FiltersEnum.critical) {
-      return location.assets.where((asset) {
-        return asset.subAssets.any((subAsset) {
-              return subAsset.isCriticalSensor;
-            }) ||
-            asset.isCriticalSensor;
-      }).map((asset) {
-        return AssetTileViewModel(asset: asset, filterOption: filterOption);
-      }).toList();
-    }
-
-    return location.assets.map((asset) {
-      return AssetTileViewModel(asset: asset, filterOption: filterOption);
-    }).toList();
-  }
-
-  @override
-  List<LocationTileViewModelProtocol> get subLocationsViewModels {
     if (FiltersEnum.fromKey(filterOption) == FiltersEnum.energy) {
-      return location.subLocations.where((subLocation) {
-        return subLocation.assets.any((asset) {
-          return asset.isEnergySensor;
-        });
-      }).map((subLocation) {
-        return LocationTileViewModel(
-          location: subLocation,
+      return location.assets.where((asset) => hasSensor(asset, (a) => a.isEnergySensor)).map((asset) {
+        return AssetTileViewModel(
+          asset: asset,
           filterOption: filterOption,
+          lockExpansion: lockExpansion,
         );
       }).toList();
     }
 
     if (FiltersEnum.fromKey(filterOption) == FiltersEnum.critical) {
-      return location.subLocations.where((subLocation) {
-        return subLocation.assets.any((asset) {
-          return asset.isCriticalSensor;
-        });
-      }).map((subLocation) {
+      return location.assets.where((asset) => hasSensor(asset, (a) => a.isCriticalSensor)).map((asset) {
+        return AssetTileViewModel(
+          asset: asset,
+          filterOption: filterOption,
+          lockExpansion: lockExpansion,
+        );
+      }).toList();
+    }
+
+    return location.assets.map((asset) {
+      return AssetTileViewModel(
+        asset: asset,
+        filterOption: filterOption,
+        lockExpansion: lockExpansion,
+      );
+    }).toList();
+  }
+
+  bool _hasSensorInSubLocations(Location location, bool Function(Asset) sensorCheck) {
+    for (final subLocation in location.subLocations) {
+      if (subLocation.assets.any(sensorCheck) || _hasSensorInSubLocations(subLocation, sensorCheck)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @override
+  List<LocationTileViewModelProtocol> get subLocationsViewModels {
+    bool hasEnergySensor(Location location) {
+      return location.assets.any((asset) => asset.isEnergySensor) ||
+          _hasSensorInSubLocations(location, (a) => a.isEnergySensor);
+    }
+
+    bool hasCriticalSensor(Location location) {
+      return location.assets.any((asset) => asset.isCriticalSensor) ||
+          _hasSensorInSubLocations(location, (a) => a.isCriticalSensor);
+    }
+
+    if (FiltersEnum.fromKey(filterOption) == FiltersEnum.energy) {
+      return location.subLocations.where(hasEnergySensor).map((subLocation) {
         return LocationTileViewModel(
           location: subLocation,
           filterOption: filterOption,
+          lockExpansion: lockExpansion,
+        );
+      }).toList();
+    }
+
+    if (FiltersEnum.fromKey(filterOption) == FiltersEnum.critical) {
+      return location.subLocations.where(hasCriticalSensor).map((subLocation) {
+        return LocationTileViewModel(
+          location: subLocation,
+          filterOption: filterOption,
+          lockExpansion: lockExpansion,
         );
       }).toList();
     }
@@ -81,6 +106,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
       return LocationTileViewModel(
         location: subLocation,
         filterOption: filterOption,
+        lockExpansion: lockExpansion,
       );
     }).toList();
   }

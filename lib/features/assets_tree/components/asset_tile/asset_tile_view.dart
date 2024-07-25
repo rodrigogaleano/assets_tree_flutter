@@ -5,10 +5,13 @@ import '../../../../support/style/app_colors.dart';
 import '../../../../support/style/app_fonts.dart';
 
 abstract class AssetTileViewModelProtocol {
-  String get title;
   bool get isComponent;
-  bool get isEnergySensor;
-  bool get isCriticalSensor;
+  bool get hasEnergySensor;
+  bool get hasCriticalSensor;
+  bool get isExpansionLocked;
+
+  String get title;
+
   List<AssetTileViewModelProtocol> get subAssetsViewModels;
 }
 
@@ -33,10 +36,25 @@ class AssetTileView extends StatelessWidget {
               style: AppFonts.robotoRegular(14, AppColors.darkBlue),
             ),
             Visibility(
-              visible: viewModel.isEnergySensor || viewModel.isCriticalSensor,
-              child: Icon(
-                viewModel.isEnergySensor ? Icons.flash_on_rounded : Icons.warning_rounded,
-                color: viewModel.isEnergySensor ? Colors.green : Colors.orange,
+              visible: viewModel.hasEnergySensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.flash_on_rounded,
+                  size: 12,
+                  color: AppColors.green,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.hasCriticalSensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.red,
+                ),
               ),
             ),
           ],
@@ -45,6 +63,7 @@ class AssetTileView extends StatelessWidget {
     }
 
     return ExpansionTile(
+      initiallyExpanded: viewModel.isExpansionLocked,
       childrenPadding: const EdgeInsets.only(left: 16),
       title: ListTile(
         title: Row(
@@ -58,10 +77,25 @@ class AssetTileView extends StatelessWidget {
               ),
             ),
             Visibility(
-              visible: viewModel.isEnergySensor || viewModel.isCriticalSensor,
-              child: Icon(
-                viewModel.isEnergySensor ? Icons.flash_on_rounded : Icons.warning_rounded,
-                color: viewModel.isEnergySensor ? Colors.green : Colors.orange,
+              visible: viewModel.hasEnergySensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.flash_on_rounded,
+                  size: 12,
+                  color: AppColors.green,
+                ),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.hasCriticalSensor,
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.circle,
+                  size: 12,
+                  color: AppColors.red,
+                ),
               ),
             ),
           ],

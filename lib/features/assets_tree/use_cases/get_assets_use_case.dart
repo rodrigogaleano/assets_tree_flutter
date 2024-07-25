@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../models/asset.dart';
 
-typedef Success = void Function(List<Asset> locations);
+typedef Success = void Function(List<Asset> assets);
 typedef Failure = void Function(String error);
 
 abstract class GetAssetsUseCaseProtocol {

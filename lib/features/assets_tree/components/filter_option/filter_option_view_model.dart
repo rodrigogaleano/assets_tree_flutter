@@ -1,3 +1,5 @@
+import 'package:flutter/src/widgets/icon_data.dart';
+
 import '../../../../support/enums/filters_enum.dart';
 import 'filter_option_view.dart';
 
@@ -6,6 +8,8 @@ abstract class FilterOptionDelegate {
 }
 
 class FilterOptionViewModel extends FilterOptionViewModelProtocol {
+  // MARK: - Init
+
   final int groupValue;
   final FiltersEnum filter;
   final FilterOptionDelegate delegate;
@@ -16,11 +20,18 @@ class FilterOptionViewModel extends FilterOptionViewModelProtocol {
     required this.groupValue,
   });
 
+  // MARK: - Public Getters
+
   @override
   String get text => filter.name;
 
   @override
   bool get isSelected => groupValue == filter.key;
+
+  @override
+  IconData get icon => filter.icon;
+
+  // MARK - Public Methods
 
   @override
   void didChangeOption() {

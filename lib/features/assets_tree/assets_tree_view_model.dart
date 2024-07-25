@@ -42,11 +42,10 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     required this.getLocationsUseCase,
   }) {
     _searchBarController.addListener(() {
-      _searchQuery = _searchBarController.text;
-      if (_searchQuery.isNotEmpty) {
-        _debouncer.run(_searchItems);
-      }
-      notifyListeners();
+      _debouncer.run(() {
+        _searchQuery = _searchBarController.text;
+        notifyListeners();
+      });
     });
   }
 
@@ -60,61 +59,19 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   @override
   List<LocationTileViewModelProtocol> get locationsViewModels {
-    // final filteredLocations = _locations.where((location) {
-    //   return location.name.toLowerCase().contains(_searchQuery.toLowerCase());
-    // }).toList();
+    var filteredLocations = _locations;
 
-    if (_selectedFilter == 1) {
-      final filteredLocations = _locations.where((location) {
-        final temAssetEnergia = location.assets.any((asset) => asset.isEnergySensor);
-
-        final temSubLocationComAssetEnergia = location.subLocations.any((subLocation) {
-          return subLocation.assets.any((asset) => asset.isEnergySensor);
-        });
-
-        final temAssetComSubAssetEnergia = location.assets.any((asset) {
-          return asset.subAssets.any((subAsset) => subAsset.isEnergySensor);
-        });
-
-        return temAssetEnergia || temSubLocationComAssetEnergia || temAssetComSubAssetEnergia;
-      });
-
-      return filteredLocations.map((location) {
-        return LocationTileViewModel(
-          location: location,
-          filterOption: _selectedFilter,
-        );
-      }).toList();
+    if (FiltersEnum.fromKey(_selectedFilter) == FiltersEnum.energy) {
+      filteredLocations = _filterLocationsByEnergySensor(filteredLocations);
+    } else if (FiltersEnum.fromKey(_selectedFilter) == FiltersEnum.critical) {
+      filteredLocations = _filterLocationsByCriticalSensor(filteredLocations);
     }
 
-    if (_selectedFilter == 2) {
-      return _locations.where((location) {
-        final temAssetCritico = location.assets.any((asset) => asset.isCriticalSensor);
-
-        // Verifica se alguma subLocation tem um Asset com isCriticalSensor como true
-        final temSubLocationComAssetCritico = location.subLocations.any((subLocation) {
-          return subLocation.assets.any((asset) => asset.isCriticalSensor);
-        });
-
-        // Verifica se algum Asset tem um subAsset com isCriticalSensor como true
-        final temAssetComSubAssetCritico = location.assets.any((asset) {
-          return asset.subAssets.any((subAsset) => subAsset.isCriticalSensor);
-        });
-
-        // Retorna true se qualquer uma das condições acima for verdadeira
-        return temAssetCritico || temSubLocationComAssetCritico || temAssetComSubAssetCritico;
-      }).map((location) {
-        return LocationTileViewModel(
-          location: location,
-          filterOption: _selectedFilter,
-        );
-      }).toList();
-    }
-
-    return _locations.map((location) {
+    return filteredLocations.map((location) {
       return LocationTileViewModel(
         location: location,
         filterOption: _selectedFilter,
+        lockExpansion: _isExpansionLocked,
       );
     }).toList();
   }
@@ -125,24 +82,20 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       return asset.locationId == null && asset.parentId == null;
     }).toList();
 
-    if (_selectedFilter == 1) {
-      return unlinkedAssets.where((asset) {
-        return asset.isEnergySensor;
-      }).map((asset) {
-        return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
-      }).toList();
+    var filteredAssets = unlinkedAssets;
+
+    if (FiltersEnum.fromKey(_selectedFilter) == FiltersEnum.energy) {
+      filteredAssets = _filterAssetsByEnergySensor(filteredAssets);
+    } else if (FiltersEnum.fromKey(_selectedFilter) == FiltersEnum.critical) {
+      filteredAssets = _filterAssetsByCriticalSensor(filteredAssets);
     }
 
-    if (_selectedFilter == 2) {
-      return unlinkedAssets.where((asset) {
-        return asset.isCriticalSensor;
-      }).map((asset) {
-        return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
-      }).toList();
-    }
-
-    return unlinkedAssets.map((asset) {
-      return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
+    return filteredAssets.map((asset) {
+      return AssetTileViewModel(
+        asset: asset,
+        filterOption: _selectedFilter,
+        lockExpansion: _isExpansionLocked,
+      );
     }).toList();
   }
 
@@ -176,7 +129,15 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     notifyListeners();
   }
 
+  // MARK: - Private Getters
+
+  bool get _isExpansionLocked {
+    return _selectedFilter != 0;
+  }
+
   // MARK: - Private Methods
+
+  // MARK: - Requests
 
   void _getLocations() {
     _setLocationsLoading(true);
@@ -203,6 +164,8 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       onComplete: () => _setAssetsLoading(false),
     );
   }
+
+  // MARK: - Combine Data
 
   void _combineSubAssetsAndAssets() {
     final subAssets = <Asset>[];
@@ -257,6 +220,60 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     _locations.removeWhere((location) => subLocations.contains(location));
   }
 
+  // MARK: - Filters
+
+  List<Location> _filterLocationsByEnergySensor(List<Location> locations) {
+    bool hasEnergySensorInSubLocations(Location location) {
+      // Verifica se alguma sublocalização ou suas sublocalizações tem o sensor de energia
+      for (final subLocation in location.subLocations) {
+        if (subLocation.assets.any((asset) => asset.isEnergySensor) || hasEnergySensorInSubLocations(subLocation)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return locations.where((location) {
+      final hasEnergyAsset = location.assets.any((asset) => asset.isEnergySensor);
+      final hasSubLocationWithEnergyAsset = hasEnergySensorInSubLocations(location);
+      final hasAssetWithSubAssetEnergy =
+          location.assets.any((asset) => asset.subAssets.any((subAsset) => subAsset.isEnergySensor));
+
+      return hasEnergyAsset || hasSubLocationWithEnergyAsset || hasAssetWithSubAssetEnergy;
+    }).toList();
+  }
+
+  List<Location> _filterLocationsByCriticalSensor(List<Location> locations) {
+    bool hasCriticalSensorInSubLocations(Location location) {
+      // Verifica se alguma sublocalização ou suas sublocalizações tem o sensor crítico
+      for (final subLocation in location.subLocations) {
+        if (subLocation.assets.any((asset) => asset.isCriticalSensor) || hasCriticalSensorInSubLocations(subLocation)) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    return locations.where((location) {
+      final hasCriticalAsset = location.assets.any((asset) => asset.isCriticalSensor);
+      final hasSubLocationWithCriticalAsset = hasCriticalSensorInSubLocations(location);
+      final hasAssetWithSubAssetCritical =
+          location.assets.any((asset) => asset.subAssets.any((subAsset) => subAsset.isCriticalSensor));
+
+      return hasCriticalAsset || hasSubLocationWithCriticalAsset || hasAssetWithSubAssetCritical;
+    }).toList();
+  }
+
+  List<Asset> _filterAssetsByEnergySensor(List<Asset> assets) {
+    return assets.where((asset) => asset.isEnergySensor).toList();
+  }
+
+  List<Asset> _filterAssetsByCriticalSensor(List<Asset> assets) {
+    return assets.where((asset) => asset.isCriticalSensor).toList();
+  }
+
+  // MARK: - Loading
+
   void _setLocationsLoading(bool isLoading) {
     _isLocationsLoading = isLoading;
     notifyListeners();
@@ -265,9 +282,5 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
   void _setAssetsLoading(bool isLoading) {
     _isAssetsLoading = isLoading;
     notifyListeners();
-  }
-
-  void _searchItems() {
-    // TODO: Filtrar itens
   }
 }

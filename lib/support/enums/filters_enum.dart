@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum FiltersEnum {
   energy,
   critical;
@@ -13,6 +15,13 @@ enum FiltersEnum {
     return switch (this) {
       FiltersEnum.energy => 'Sensor de Energia',
       FiltersEnum.critical => 'Crítico',
+    };
+  }
+
+  IconData get icon {
+    return switch (this) {
+      FiltersEnum.energy => Icons.flash_on_rounded,
+      FiltersEnum.critical => Icons.warning_amber_rounded,
     };
   }
 
