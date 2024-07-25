@@ -15,5 +15,9 @@ class AppThemes {
       backgroundColor: AppColors.darkBlue,
       iconTheme: IconThemeData(color: AppColors.white),
     ),
+
+    // - MARK - Expansion Tile
+
+    dividerColor: AppColors.transparent,
   );
 }

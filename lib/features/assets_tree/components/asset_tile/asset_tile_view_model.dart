@@ -7,12 +7,12 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
 
   final Asset asset;
   final int filterOption;
-  final bool lockExpansion;
+  final bool expandedTile;
 
   AssetTileViewModel({
     required this.asset,
     required this.filterOption,
-    required this.lockExpansion,
+    required this.expandedTile,
   });
 
   // MARK: - Public Getters
@@ -28,7 +28,7 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
   }
 
   @override
-  bool get isExpansionLocked => filterOption != 0;
+  bool get isExpansionLocked => expandedTile;
 
   @override
   bool get hasCriticalSensor => asset.isCriticalSensor;
@@ -51,7 +51,7 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
         return AssetTileViewModel(
           asset: subAsset,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expandedTile: expandedTile,
         );
       }).toList();
     }
@@ -61,7 +61,7 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
         return AssetTileViewModel(
           asset: subAsset,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expandedTile: expandedTile,
         );
       }).toList();
     }
@@ -70,7 +70,7 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
       return AssetTileViewModel(
         asset: subAsset,
         filterOption: filterOption,
-        lockExpansion: lockExpansion,
+        expandedTile: expandedTile,
       );
     }).toList();
   }
