@@ -1,6 +1,11 @@
-# assets_tree
+# Assets Tree
 
-Assets Tree é um aplicativo Flutter que visualiza a hierarquia de ativos de uma empresa em uma estrutura de árvore, facilitando o gerenciamento e a manutenção eficiente dos ativos.
+Aplicativo Flutter que visualiza a hierarquia de ativos de uma empresa em uma estrutura de árvore.
+
+<img width="250" src="https://github.com/user-attachments/assets/75ae709b-35ca-4510-8e6c-421e7e105f79" />
+<img width="250" src="https://github.com/user-attachments/assets/b7434fff-b07d-4d20-a95c-5eb023473d1f" />
+<img width="250" src="https://github.com/user-attachments/assets/e8e07db4-d018-453d-9993-33abaeae45f5" />
+<img width="250" src="https://github.com/user-attachments/assets/a8d20d40-7764-4783-a490-db32891be6eb" />
 
 ## Instalação do Projeto
 
@@ -12,6 +17,7 @@ Com SSH
 
 ```bash
 git@github.com:rodrigogaleano/assets_tree_flutter.git
+
 ```
 
 Com HTTPS
