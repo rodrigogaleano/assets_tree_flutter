@@ -33,7 +33,11 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
     }
 
     if (FiltersEnum.fromKey(filterOption) == FiltersEnum.energy) {
-      return location.assets.where((asset) => hasSensor(asset, (a) => a.isEnergySensor)).map((asset) {
+      return location.assets
+          .where((asset) => hasSensor(asset, (a) {
+                return a.isEnergySensor;
+              }))
+          .map((asset) {
         return AssetTileViewModel(
           asset: asset,
           filterOption: filterOption,
@@ -43,7 +47,11 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
     }
 
     if (FiltersEnum.fromKey(filterOption) == FiltersEnum.critical) {
-      return location.assets.where((asset) => hasSensor(asset, (a) => a.isCriticalSensor)).map((asset) {
+      return location.assets
+          .where((asset) => hasSensor(asset, (a) {
+                return a.isCriticalSensor;
+              }))
+          .map((asset) {
         return AssetTileViewModel(
           asset: asset,
           filterOption: filterOption,
@@ -67,6 +75,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
         return true;
       }
     }
+
     return false;
   }
 

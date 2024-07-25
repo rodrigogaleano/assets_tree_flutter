@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/localization.dart';
 
 enum FiltersEnum {
   energy,
@@ -11,10 +12,10 @@ enum FiltersEnum {
     };
   }
 
-  String get name {
+  String name(Localization l10n) {
     return switch (this) {
-      FiltersEnum.energy => 'Sensor de Energia',
-      FiltersEnum.critical => 'Crítico',
+      FiltersEnum.energy => l10n.filterEnergyInputTitle,
+      FiltersEnum.critical => l10n.filterCritialInputTitle,
     };
   }
 

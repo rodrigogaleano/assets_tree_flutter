@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/localization.dart';
 
 import '../../support/enums/filters_enum.dart';
 import '../../support/enums/units_enum.dart';
@@ -33,10 +34,12 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
   // MARK: - Init
 
   final UnitsEnum unit;
+  final Localization l10n;
   final GetAssetsUseCaseProtocol getAssetsUseCase;
   final GetLocationsUseCaseProtocol getLocationsUseCase;
 
   AssetsViewModel({
+    required this.l10n,
     required this.unit,
     required this.getAssetsUseCase,
     required this.getLocationsUseCase,
@@ -56,6 +59,21 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   @override
   String get errorMessage => _errorMessage;
+
+  @override
+  TextEditingController get searchBarController => _searchBarController;
+
+  @override
+  List<FilterOptionViewModelProtocol> get filterOptionsViewModels {
+    return FiltersEnum.values.map((filter) {
+      return FilterOptionViewModel(
+        l10n: l10n,
+        filter: filter,
+        delegate: this,
+        groupValue: _selectedFilter,
+      );
+    }).toList();
+  }
 
   @override
   List<LocationTileViewModelProtocol> get locationsViewModels {
@@ -107,20 +125,6 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     }).toList();
   }
 
-  @override
-  TextEditingController get searchBarController => _searchBarController;
-
-  @override
-  List<FilterOptionViewModelProtocol> get filterOptionsViewModels {
-    return FiltersEnum.values.map((filter) {
-      return FilterOptionViewModel(
-        filter: filter,
-        delegate: this,
-        groupValue: _selectedFilter,
-      );
-    }).toList();
-  }
-
   // MARK: - Public Methods
 
   @override
@@ -145,7 +149,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   // MARK: - Private Methods
 
-  // MARK: - Requests
+  // Requests
 
   void _getLocations() {
     _setLocationsLoading(true);
@@ -173,7 +177,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     );
   }
 
-  // MARK: - Combine Data
+  // Combine Data
 
   void _combineSubAssetsAndAssets() {
     final subAssets = <Asset>[];
@@ -228,7 +232,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     _locations.removeWhere((location) => subLocations.contains(location));
   }
 
-  // MARK: - Filters
+  // Filters
 
   List<Location> _filterLocationsByEnergySensor(List<Location> locations) {
     bool hasEnergySensorInSubLocations(Location location) {
@@ -311,7 +315,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
     return assets.where((asset) => asset.isCriticalSensor).toList();
   }
 
-  // MARK: - Loading
+  // Loading
 
   void _setLocationsLoading(bool isLoading) {
     _isLocationsLoading = isLoading;

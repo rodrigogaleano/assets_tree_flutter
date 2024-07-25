@@ -83,6 +83,7 @@ class AssetTileViewModel extends AssetTileViewModelProtocol {
         return true;
       }
     }
+
     return false;
   }
 }
