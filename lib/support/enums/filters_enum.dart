@@ -15,4 +15,12 @@ enum FiltersEnum {
       FiltersEnum.critical => 'Crítico',
     };
   }
+
+  static FiltersEnum? fromKey(int key) {
+    return switch (key) {
+      1 => FiltersEnum.energy,
+      2 => FiltersEnum.critical,
+      _ => null,
+    };
+  }
 }

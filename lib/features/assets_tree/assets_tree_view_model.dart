@@ -26,7 +26,6 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   List<Asset> _assets = [];
   List<Location> _locations = [];
-  List<Asset> _filteredAssets = [];
 
   final _debouncer = Debouncer(milliseconds: 1500);
   final _searchBarController = TextEditingController();
@@ -61,8 +60,62 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   @override
   List<LocationTileViewModelProtocol> get locationsViewModels {
+    // final filteredLocations = _locations.where((location) {
+    //   return location.name.toLowerCase().contains(_searchQuery.toLowerCase());
+    // }).toList();
+
+    if (_selectedFilter == 1) {
+      final filteredLocations = _locations.where((location) {
+        final temAssetEnergia = location.assets.any((asset) => asset.isEnergySensor);
+
+        final temSubLocationComAssetEnergia = location.subLocations.any((subLocation) {
+          return subLocation.assets.any((asset) => asset.isEnergySensor);
+        });
+
+        final temAssetComSubAssetEnergia = location.assets.any((asset) {
+          return asset.subAssets.any((subAsset) => subAsset.isEnergySensor);
+        });
+
+        return temAssetEnergia || temSubLocationComAssetEnergia || temAssetComSubAssetEnergia;
+      });
+
+      return filteredLocations.map((location) {
+        return LocationTileViewModel(
+          location: location,
+          filterOption: _selectedFilter,
+        );
+      }).toList();
+    }
+
+    if (_selectedFilter == 2) {
+      return _locations.where((location) {
+        final temAssetCritico = location.assets.any((asset) => asset.isCriticalSensor);
+
+        // Verifica se alguma subLocation tem um Asset com isCriticalSensor como true
+        final temSubLocationComAssetCritico = location.subLocations.any((subLocation) {
+          return subLocation.assets.any((asset) => asset.isCriticalSensor);
+        });
+
+        // Verifica se algum Asset tem um subAsset com isCriticalSensor como true
+        final temAssetComSubAssetCritico = location.assets.any((asset) {
+          return asset.subAssets.any((subAsset) => subAsset.isCriticalSensor);
+        });
+
+        // Retorna true se qualquer uma das condições acima for verdadeira
+        return temAssetCritico || temSubLocationComAssetCritico || temAssetComSubAssetCritico;
+      }).map((location) {
+        return LocationTileViewModel(
+          location: location,
+          filterOption: _selectedFilter,
+        );
+      }).toList();
+    }
+
     return _locations.map((location) {
-      return LocationTileViewModel(location: location);
+      return LocationTileViewModel(
+        location: location,
+        filterOption: _selectedFilter,
+      );
     }).toList();
   }
 
@@ -72,8 +125,24 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       return asset.locationId == null && asset.parentId == null;
     }).toList();
 
+    if (_selectedFilter == 1) {
+      return unlinkedAssets.where((asset) {
+        return asset.isEnergySensor;
+      }).map((asset) {
+        return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
+      }).toList();
+    }
+
+    if (_selectedFilter == 2) {
+      return unlinkedAssets.where((asset) {
+        return asset.isCriticalSensor;
+      }).map((asset) {
+        return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
+      }).toList();
+    }
+
     return unlinkedAssets.map((asset) {
-      return AssetTileViewModel(asset: asset);
+      return AssetTileViewModel(asset: asset, filterOption: _selectedFilter);
     }).toList();
   }
 
@@ -103,14 +172,6 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
   @override
   void didChangeFilterOption(int selectedValue) {
     _selectedFilter = selectedValue;
-
-    if (selectedValue == 1) {
-      _filteredAssets = _assets.where((asset) => asset.sensorType == 'energy').toList();
-    } else if (selectedValue == 2) {
-      _filteredAssets = _assets.where((asset) => asset.status == 'alert').toList();
-    } else {
-      _filteredAssets = [];
-    }
 
     notifyListeners();
   }

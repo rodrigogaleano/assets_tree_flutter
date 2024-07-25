@@ -7,6 +7,8 @@ import '../../../../support/style/app_fonts.dart';
 abstract class AssetTileViewModelProtocol {
   String get title;
   bool get isComponent;
+  bool get isEnergySensor;
+  bool get isCriticalSensor;
   List<AssetTileViewModelProtocol> get subAssetsViewModels;
 }
 
@@ -30,6 +32,13 @@ class AssetTileView extends StatelessWidget {
               viewModel.title,
               style: AppFonts.robotoRegular(14, AppColors.darkBlue),
             ),
+            Visibility(
+              visible: viewModel.isEnergySensor || viewModel.isCriticalSensor,
+              child: Icon(
+                viewModel.isEnergySensor ? Icons.flash_on_rounded : Icons.warning_rounded,
+                color: viewModel.isEnergySensor ? Colors.green : Colors.orange,
+              ),
+            ),
           ],
         ),
       );
@@ -46,6 +55,13 @@ class AssetTileView extends StatelessWidget {
               child: Text(
                 viewModel.title,
                 style: AppFonts.robotoRegular(14, AppColors.darkBlue),
+              ),
+            ),
+            Visibility(
+              visible: viewModel.isEnergySensor || viewModel.isCriticalSensor,
+              child: Icon(
+                viewModel.isEnergySensor ? Icons.flash_on_rounded : Icons.warning_rounded,
+                color: viewModel.isEnergySensor ? Colors.green : Colors.orange,
               ),
             ),
           ],

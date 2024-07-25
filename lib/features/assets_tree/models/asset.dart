@@ -18,4 +18,8 @@ class Asset {
   static List<Asset> fromMaps(List<dynamic> maps) {
     return maps.map((asset) => Asset.fromMap(asset)).toList();
   }
+
+  bool get isEnergySensor => sensorType == 'energy';
+
+  bool get isCriticalSensor => status == 'alert';
 }
