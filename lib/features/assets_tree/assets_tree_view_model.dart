@@ -93,7 +93,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       return LocationTileViewModel(
         location: location,
         filterOption: _selectedFilter,
-        lockExpansion: _isExpansionLocked,
+        expendedTile: _isInitiallyExpanded,
       );
     }).toList();
   }
@@ -120,7 +120,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
       return AssetTileViewModel(
         asset: asset,
         filterOption: _selectedFilter,
-        lockExpansion: _isExpansionLocked,
+        expandedTile: _isInitiallyExpanded,
       );
     }).toList();
   }
@@ -143,7 +143,7 @@ class AssetsViewModel extends AssetsTreeProtocol implements FilterOptionDelegate
 
   // MARK: - Private Getters
 
-  bool get _isExpansionLocked {
+  bool get _isInitiallyExpanded {
     return _selectedFilter != 0 || _searchQuery.isNotEmpty;
   }
 

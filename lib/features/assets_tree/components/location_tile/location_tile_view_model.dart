@@ -10,18 +10,18 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
 
   final int filterOption;
   final Location location;
-  final bool lockExpansion;
+  final bool expendedTile;
 
   LocationTileViewModel({
     required this.location,
     required this.filterOption,
-    required this.lockExpansion,
+    required this.expendedTile,
   });
 
   // MARK: - Public Getters
 
   @override
-  bool get isExpansionLocked => lockExpansion;
+  bool get initiallyExpanded => expendedTile;
 
   @override
   String get title => location.name;
@@ -41,7 +41,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
         return AssetTileViewModel(
           asset: asset,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expandedTile: expendedTile,
         );
       }).toList();
     }
@@ -55,7 +55,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
         return AssetTileViewModel(
           asset: asset,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expandedTile: expendedTile,
         );
       }).toList();
     }
@@ -64,7 +64,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
       return AssetTileViewModel(
         asset: asset,
         filterOption: filterOption,
-        lockExpansion: lockExpansion,
+        expandedTile: expendedTile,
       );
     }).toList();
   }
@@ -96,7 +96,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
         return LocationTileViewModel(
           location: subLocation,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expendedTile: expendedTile,
         );
       }).toList();
     }
@@ -106,7 +106,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
         return LocationTileViewModel(
           location: subLocation,
           filterOption: filterOption,
-          lockExpansion: lockExpansion,
+          expendedTile: expendedTile,
         );
       }).toList();
     }
@@ -115,7 +115,7 @@ class LocationTileViewModel extends LocationTileViewModelProtocol {
       return LocationTileViewModel(
         location: subLocation,
         filterOption: filterOption,
-        lockExpansion: lockExpansion,
+        expendedTile: expendedTile,
       );
     }).toList();
   }

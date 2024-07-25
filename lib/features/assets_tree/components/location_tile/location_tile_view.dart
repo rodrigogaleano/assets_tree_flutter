@@ -7,7 +7,7 @@ import '../asset_tile/asset_tile_view.dart';
 
 abstract class LocationTileViewModelProtocol {
   String get title;
-  bool get isExpansionLocked;
+  bool get initiallyExpanded;
   List<AssetTileViewModelProtocol> get assetsViewModels;
   List<LocationTileViewModelProtocol> get subLocationsViewModels;
 }
@@ -24,7 +24,7 @@ class LocationTileView extends StatelessWidget {
     }
 
     return ExpansionTile(
-      initiallyExpanded: viewModel.isExpansionLocked,
+      initiallyExpanded: viewModel.initiallyExpanded,
       childrenPadding: const EdgeInsets.only(left: 16),
       title: _tileTitle,
       children: [
