@@ -2,6 +2,7 @@
 
 Aplicativo Flutter que visualiza a hierarquia de ativos de uma empresa em uma estrutura de árvore.
 
+<img width="250" src="https://github.com/user-attachments/assets/0c1cefed-374a-4296-b84c-e0b252c8543a" />
 <img width="250" src="https://github.com/user-attachments/assets/75ae709b-35ca-4510-8e6c-421e7e105f79" />
 <img width="250" src="https://github.com/user-attachments/assets/b7434fff-b07d-4d20-a95c-5eb023473d1f" />
 <img width="250" src="https://github.com/user-attachments/assets/e8e07db4-d018-453d-9993-33abaeae45f5" />
